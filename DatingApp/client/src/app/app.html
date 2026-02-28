@@ -1,0 +1,23 @@
+<h1>{{ message() }}</h1>
+
+<span>There are {{ memberCount()}} members.</span>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Display Name</th>
+      <th>Email</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (member of members(); track member.id) {
+      <tr>
+        <td>{{ member.id }}</td>
+        <td>{{ member.displayName }}</td>
+        <td>{{ member.email }}</td>
+      </tr>
+    }
+  </tbody>
+</table>
