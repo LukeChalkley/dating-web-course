@@ -34,8 +34,25 @@ public class AccountController(AppDbContext context) : BaseApiController(context
         return userToRegister;
     }
 
+    [HttpPost("login")]
+    public async Task<ActionResult<AppUser>> Login(UserLoginDto userLoginDto)
+    {
+        // IMPORTANT: We cannot use FindAsync because Email is NOT the PK.
+        var user = await context.Users.SingleOrDefaultAsync(u => u.Email.ToLower() == userLoginDto.Email.ToLower());
+        
+        if (user == null) return BadRequest("The email address or password provided is incorrect.");
+        
+        using var hmac = new HMACSHA512(user.PasswordSalt);
+
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userLoginDto.Password));
+
+        if (computedHash.SequenceEqual(user.PasswordHash)) return user;
+        else return BadRequest("The email address or password provided is incorrect.");
+    }
+    
     private async Task<bool> UserExists(string email)
     {
+        // IMPORTANT: We cannot use FindAsync because Email is NOT the PK.
         return await context.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower());
     }
 }
