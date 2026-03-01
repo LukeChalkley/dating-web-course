@@ -17,4 +17,14 @@ public class AppUser
     /// Gets or sets e-mail of the AppUser instance.
     /// </summary>
     public required string Email { get; set; }
+    
+    /// <summary>
+    /// Simple one-way encryption from plaintext password to hash.
+    /// </summary>
+    public required byte[] PasswordHash { get; set; }
+    
+    /// <summary>
+    /// Allows randomisation of PasswordHash so same passwords don't equate to the same hash.
+    /// </summary>
+    public required byte[] PasswordSalt { get; set; }
 }
