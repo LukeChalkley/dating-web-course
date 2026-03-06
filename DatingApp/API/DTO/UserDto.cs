@@ -1,6 +1,6 @@
-﻿namespace API.Entities;
+namespace API.DTO;
 
-public class AppUser
+public class UserDto
 {
     /// <summary>
     /// Gets the ID of the AppUser.
@@ -18,13 +18,7 @@ public class AppUser
     /// </summary>
     public required string Email { get; set; }
     
-    /// <summary>
-    /// Simple one-way encryption from plaintext password to hash.
-    /// </summary>
-    public required byte[] PasswordHash { get; set; }
+    public required string Token { get; set; }
     
-    /// <summary>
-    /// Allows randomisation of PasswordHash so same passwords don't equate to the same hash.
-    /// </summary>
-    public required byte[] PasswordSalt { get; set; }
+    public string ImageUrl { get; set; }
 }
