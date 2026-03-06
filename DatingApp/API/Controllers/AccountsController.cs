@@ -4,15 +4,17 @@ using System.Text.Unicode;
 using API.Data;
 using API.DTO;
 using API.Entities;
+using API.Extensions;
+using API.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers;
 
-public class AccountController(AppDbContext context) : BaseApiController(context)
+public class AccountController(AppDbContext context, ITokenService tokenService) : BaseApiController(context)
 {
     [HttpPost("register")]
-    public async Task<ActionResult<AppUser>> Register(RegisterUserDto registerUserDto)
+    public async Task<ActionResult<UserDto>> Register(RegisterUserDto registerUserDto)
     {
         if (await this.UserExists(registerUserDto.Email)) 
             return BadRequest("User with the given e-mail address is already registered.");
@@ -31,11 +33,11 @@ public class AccountController(AppDbContext context) : BaseApiController(context
         await context.Users.AddAsync(userToRegister);
         await context.SaveChangesAsync();
         
-        return userToRegister;
+        return userToRegister.ToDto(tokenService);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AppUser>> Login(UserLoginDto userLoginDto)
+    public async Task<ActionResult<UserDto>> Login(UserLoginDto userLoginDto)
     {
         // IMPORTANT: We cannot use FindAsync because Email is NOT the PK.
         var user = await context.Users.SingleOrDefaultAsync(u => u.Email.ToLower() == userLoginDto.Email.ToLower());
@@ -46,7 +48,7 @@ public class AccountController(AppDbContext context) : BaseApiController(context
 
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userLoginDto.Password));
 
-        if (computedHash.SequenceEqual(user.PasswordHash)) return user;
+        if (computedHash.SequenceEqual(user.PasswordHash)) return user.ToDto(tokenService);
         else return BadRequest("The email address or password provided is incorrect.");
     }
     

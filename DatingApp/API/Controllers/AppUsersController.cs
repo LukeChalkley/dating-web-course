@@ -1,5 +1,6 @@
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ public class AppUsersController(AppDbContext context) : BaseApiController(contex
         return await context.Users.ToListAsync();
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<AppUser>> GetById(string id)
     {
