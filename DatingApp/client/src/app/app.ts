@@ -3,17 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { NavComponent } from '../layout/nav/nav.component';
 import { AccountServiceService } from '../core/services/account-service.service';
-import { HomeComponent } from '../features/home/home.component';
 import { User } from '../types/user';
+import { Router, RouterOutlet } from '@angular/router';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [NavComponent, HomeComponent],
+  imports: [NavComponent, RouterOutlet, NgClass],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
 export class App implements OnInit {
   private http = inject(HttpClient);
+  protected router = inject(Router);
   private readonly accountService = inject(AccountServiceService);
   protected readonly title = signal('Dating Client Members');
   protected readonly message = signal('Reading members...');
@@ -26,8 +28,6 @@ export class App implements OnInit {
     this.members.set(await this.getAllMembers());
     this.memberCount.set(this.members().length);
 
-    this.setCurrentUser();
-
     setTimeout(() => this.message.set(''), 2000);
   }
 
@@ -38,15 +38,6 @@ export class App implements OnInit {
       this.error.set('Error getting members');
       this.showError.set(true);
       throw err;
-    }
-  }
-
-  setCurrentUser() {
-    const userString = localStorage.getItem('user');
-
-    if (userString) {
-      const user = JSON.parse(userString);
-      this.accountService.currentUser.set(user);
     }
   }
 }
