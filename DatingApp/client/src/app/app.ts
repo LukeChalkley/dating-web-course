@@ -4,6 +4,7 @@ import { lastValueFrom } from 'rxjs';
 import { NavComponent } from '../layout/nav/nav.component';
 import { AccountServiceService } from '../core/services/account-service.service';
 import { HomeComponent } from '../features/home/home.component';
+import { User } from '../types/user';
 
 @Component({
   selector: 'app-root',
@@ -17,7 +18,7 @@ export class App implements OnInit {
   protected readonly title = signal('Dating Client Members');
   protected readonly message = signal('Reading members...');
   protected readonly memberCount = signal(0);
-  protected readonly members = signal<any>([]);
+  protected readonly members = signal<User[]>([]);
   protected readonly error = signal<string>('');
   protected readonly showError = signal(false);
 
@@ -32,7 +33,7 @@ export class App implements OnInit {
 
   async getAllMembers() {
     try {
-      return await lastValueFrom(this.http.get('https://localhost:7092/api/AppUsers/'));
+      return await lastValueFrom(this.http.get<User[]>('https://localhost:7092/api/AppUsers/'));
     } catch (err) {
       this.error.set('Error getting members');
       this.showError.set(true);

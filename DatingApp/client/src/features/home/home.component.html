@@ -19,6 +19,8 @@
     </div>
   } @else {
     <div class="w-full text-2xl text-center flex justify-center">
+      <app-register (registrationActive)="showRegister($event)"
+                    class="w-full"  />
     </div>
   }
 
