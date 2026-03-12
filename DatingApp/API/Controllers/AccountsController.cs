@@ -42,14 +42,14 @@ public class AccountController(AppDbContext context, ITokenService tokenService)
         // IMPORTANT: We cannot use FindAsync because Email is NOT the PK.
         var user = await context.Users.SingleOrDefaultAsync(u => u.Email.ToLower() == userLoginDto.Email.ToLower());
         
-        if (user == null) return BadRequest("The email address or password provided is incorrect.");
+        if (user == null) return Unauthorized("The email address or password provided is incorrect.");
         
         using var hmac = new HMACSHA512(user.PasswordSalt);
 
         var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userLoginDto.Password));
 
         if (computedHash.SequenceEqual(user.PasswordHash)) return user.ToDto(tokenService);
-        else return BadRequest("The email address or password provided is incorrect.");
+        else return Unauthorized("The email address or password provided is incorrect.");
     }
     
     private async Task<bool> UserExists(string email)
