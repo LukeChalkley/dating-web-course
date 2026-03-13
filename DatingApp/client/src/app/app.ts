@@ -6,10 +6,11 @@ import { AccountServiceService } from '../core/services/account-service.service'
 import { User } from '../types/user';
 import { Router, RouterOutlet } from '@angular/router';
 import { NgClass } from '@angular/common';
+import { TestErrorsComponent } from '../features/test-errors/test-errors.component';
 
 @Component({
   selector: 'app-root',
-  imports: [NavComponent, RouterOutlet, NgClass],
+  imports: [NavComponent, RouterOutlet, NgClass, TestErrorsComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

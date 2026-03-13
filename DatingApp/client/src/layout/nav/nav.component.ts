@@ -4,11 +4,12 @@ import { AccountServiceService } from '../../core/services/account-service.servi
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastServiceService } from '../../core/services/toast-service.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { TestErrorsComponent } from '../../features/test-errors/test-errors.component';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [FormsModule, RouterLink, RouterLinkActive],
+  imports: [FormsModule, RouterLink, RouterLinkActive, TestErrorsComponent],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css',
 })
